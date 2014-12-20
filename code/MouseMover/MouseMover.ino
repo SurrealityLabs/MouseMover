@@ -1,4 +1,7 @@
-#define DELAYTIME (60u * 1000u)
+#define DELAYTIME (60L * 1000L)
+
+long previousMillis = 0;
+unsigned int state = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -7,13 +10,16 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  static unsigned long previousMillis = 0;
-  unsigned long currentMillis = millis();
+  long currentMillis = millis();
   
   if(currentMillis - previousMillis >= DELAYTIME) {
-    Mouse.move(1, 1);
-  } else if(currentMillis - previousMillis >= (DELAYTIME + 100)) {
-    Mouse.move(-1, -1);
+    if(state) {
+      Mouse.move(1, 1);
+      state = 0;
+    } else {
+      Mouse.move(-1, -1);
+      state = 1;
+    }
     previousMillis = currentMillis;
   }
 }
